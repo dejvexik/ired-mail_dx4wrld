@@ -9,11 +9,11 @@ A complete step-by-step manual for installing iRedMail on Ubuntu 22.04.
 
 ---
 
-
 ## Contents
 
 1. [Introduction](#1-introduction)
 2. [Prerequisites](#2-prerequisites)
+   - [2.1 Required Ports & Port Forwarding](#21-required-ports--port-forwarding)
 3. [Manual Installation Steps](#3-manual-installation-steps)
    - [3.1 Set the Hostname](#31-set-the-hostname)
    - [3.2 Download and Run iRedMail](#32-download-and-run-iredmail)
@@ -45,6 +45,73 @@ This guide covers the full manual installation of iRedMail on a fresh Ubuntu 22.
 - SSH access as a **non-root user** with `sudo` privileges
 - An open support ticket with your hosting provider to **unblock SMTP port 25**
 - An up-to-date system (`apt update` / `apt upgrade`)
+
+### 2.1 Required Ports & Port Forwarding
+
+Aby mailserver fungoval správne (odosielanie, prijímanie, webmail, admin panel), musia byť na serveri a smerom k nemu otvorené nasledovné porty:
+
+| Port | Protokol | Účel |
+|------|----------|------|
+| **22** | TCP | SSH – vzdialená správa servera |
+| **25** | TCP | SMTP – prijímanie a odosielanie pošty medzi mailservermi |
+| **80** | TCP | HTTP – presmerovanie na HTTPS, overenie pre Let's Encrypt |
+| **443** | TCP | HTTPS – webmail (Roundcube), iRedAdmin |
+| **110** | TCP | POP3 (nešifrovaný, voliteľné) |
+| **995** | TCP | POP3S – POP3 cez SSL/TLS |
+| **143** | TCP | IMAP (nešifrovaný, voliteľné) |
+| **993** | TCP | IMAPS – IMAP cez SSL/TLS |
+| **587** | TCP | SMTP Submission (STARTTLS) – odosielanie z e-mailových klientov |
+| **465** | TCP | SMTPS – odosielanie cez SSL/TLS (implicitné TLS) |
+| **4190** | TCP | ManageSieve (voliteľné, ak používate Sieve filtre) |
+
+> **Poznámka:** Ak je server priamo na verejnej IP adrese (typický prípad pri VPS/dedikovanom serveri u hostingového providera), tieto porty stačí povoliť vo firewalli servera (napr. `ufw` alebo `iptables`) – inštalátor iRedMail si väčšinu pravidiel nastaví automaticky počas inštalácie (viď krok 3.2).
+
+#### Overenie/otvorenie portov cez UFW na serveri
+
+```bash
+sudo ufw allow 22/tcp
+sudo ufw allow 25/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 110/tcp
+sudo ufw allow 995/tcp
+sudo ufw allow 143/tcp
+sudo ufw allow 993/tcp
+sudo ufw allow 587/tcp
+sudo ufw allow 465/tcp
+sudo ufw allow 4190/tcp
+sudo ufw status verbose
+```
+
+#### Port forwarding na routeri (ak server beží za domácou/firemnou sieťou a NAT-om)
+
+Ak server nie je priamo na verejnej IP, ale beží za routerom (napr. doma alebo v malej firemnej sieti), je potrebné nastaviť **port forwarding (NAT)** na routeri, aby sa premávka z internetu presmerovala na lokálnu IP adresu servera:
+
+1. Prihláste sa do administrácie routera (zvyčajne `192.168.1.1` alebo `192.168.0.1` cez webový prehliadač).
+2. Nájdite sekciu **Port Forwarding** / **NAT** / **Virtual Server** (názov sa líši podľa výrobcu).
+3. Serveru nastavte **statickú lokálnu IP adresu** (napr. cez DHCP reservation), aby sa po reštarte routera nezmenila.
+4. Pre každý port z tabuľky vyššie vytvorte pravidlo presmerovania, napr.:
+
+   | External Port | Internal IP | Internal Port | Protokol |
+   |----------------|--------------|----------------|----------|
+   | 25 | 192.168.1.100 | 25 | TCP |
+   | 80 | 192.168.1.100 | 80 | TCP |
+   | 443 | 192.168.1.100 | 443 | TCP |
+   | 587 | 192.168.1.100 | 587 | TCP |
+   | 465 | 192.168.1.100 | 465 | TCP |
+   | 993 | 192.168.1.100 | 993 | TCP |
+   | 995 | 192.168.1.100 | 995 | TCP |
+
+5. Uložte a reštartujte router.
+6. Otestujte dostupnosť portov zvonku (napr. z inej siete alebo pomocou online nástroja na test portov):
+
+   ```bash
+   nc -zv mail.example.com 25
+   nc -zv mail.example.com 443
+   nc -zv mail.example.com 587
+   ```
+
+> **Dôležité:** Mnohí domáci/rezidenční ISP blokujú port 25 na strane poskytovateľa (kvôli spamu), preto aj po správnom port forwardingu môže byť potrebné požiadať ISP o jeho odblokovanie – rovnako ako pri hostingových providoch (viď sekcia 2, posledný bod).
 
 ---
 
@@ -159,7 +226,7 @@ sudo systemctl restart nginx postfix dovecot
 
 ## 4. Conclusion
 
-Following this procedure gives you a fully installed and secured iRedMail mail server, with valid SPF, DKIM, and DMARC records in place.
+Following this procedure gives you a fully installed and secured iRedMail mail server, with valid SPF, DKIM, and DMARC records in place, and all required ports correctly opened and forwarded.
 
 ---
 
