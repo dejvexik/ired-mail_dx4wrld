@@ -1,6 +1,6 @@
 # iRedMail Installation Guide — Ubuntu 22.04
 
-![iRedMail Fast Install by dx4wrld]([iredmail-header.png](https://cdn.discordapp.com/attachments/1532368721174073498/1532369265041084457/content.png?ex=6a6c9996&is=6a6b4816&hm=26deb4607b34962679b5155992595a9aa46fa8a59e18a0883b299d203f99e3a9&))
+![iRedMail Fast Install by dx4wrld](https://cdn.discordapp.com/attachments/1532368721174073498/1532369265041084457/content.png?ex=6a6c9996&is=6a6b4816&hm=26deb4607b34962679b5155992595a9aa46fa8a59e18a0883b299d203f99e3a9)
 
 **Mail Server Deployment Guide**  
 A complete step-by-step manual for installing iRedMail on Ubuntu 22.04.
