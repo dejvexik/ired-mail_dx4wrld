@@ -1,6 +1,6 @@
 # install_iredmail.sh — Automated iRedMail Installer (Ubuntu 22.04)
 
-![iRedMail Fast Install by dx4wrld](https://cdn.discordapp.com/attachments/1467941859816116460/1532466440580501628/content.png?ex=6a6cf417&is=6a6ba297&hm=0073f07ec7a9b9891abc90b68c5b853680da6f23b3c00d24833956d5fb43afb6&)
+![iRedMail Fast Install by dx4wrld]([https://cdn.discordapp.com/attachments/1467941859816116460/1532466440580501628/content.png?ex=6a6cf417&is=6a6ba297&hm=0073f07ec7a9b9891abc90b68c5b853680da6f23b3c00d24833956d5fb43afb6&](https://cdn.discordapp.com/attachments/1532368721174073498/1532369265041084457/content.png?ex=6a752b56&is=6a73d9d6&hm=88931ec8b1cb6306fe0254480d278842704a59cee44234309f911aa099b6efc4&))
 
 **Automated deployment script**
 A complete, detailed reference for `install_iredmail.sh` — what it does, why it does it that way, how to configure it, how to run it, and how to troubleshoot it. Installs the current stable release of iRedMail (**1.8.4**) on a fresh Ubuntu 22.04 server.
